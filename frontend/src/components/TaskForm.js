@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createTask } from '../services/api';
+import './TaskForm.css'; // CSS dosyasını ekledik.
 
 const TaskForm = ({ onTaskCreated }) => {
   const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ const TaskForm = ({ onTaskCreated }) => {
         ownerId: '',
         createdById: ''
       });
-      if (onTaskCreated) onTaskCreated(); // Listeyi yenilemek için
+      if (onTaskCreated) onTaskCreated();
     } catch (error) {
       alert('Görev eklenirken hata oluştu.');
       console.error(error);
@@ -40,60 +41,84 @@ const TaskForm = ({ onTaskCreated }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="task-form" onSubmit={handleSubmit}>
       <h3>Yeni Görev Ekle</h3>
 
-      <input
-        type="text"
-        name="title"
-        placeholder="Başlık"
-        value={formData.title}
-        onChange={handleChange}
-        required
-      />
+      <div className="form-group">
+        <label htmlFor="title">Başlık</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Görev başlığı girin"
+          value={formData.title}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-      <textarea
-        name="description"
-        placeholder="Açıklama"
-        value={formData.description}
-        onChange={handleChange}
-      />
+      <div className="form-group">
+        <label htmlFor="description">Açıklama</label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Görev açıklaması"
+          value={formData.description}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input
-        type="date"
-        name="dueDate"
-        value={formData.dueDate}
-        onChange={handleChange}
-      />
+      <div className="form-group">
+        <label htmlFor="dueDate">Teslim Tarihi</label>
+        <input
+          type="date"
+          id="dueDate"
+          name="dueDate"
+          value={formData.dueDate}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input
-        type="number"
-        name="projectId"
-        placeholder="Proje ID"
-        value={formData.projectId}
-        onChange={handleChange}
-        required
-      />
+      <div className="form-group">
+        <label htmlFor="projectId">Proje ID</label>
+        <input
+          type="number"
+          id="projectId"
+          name="projectId"
+          placeholder="Proje ID"
+          value={formData.projectId}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-      <input
-        type="number"
-        name="ownerId"
-        placeholder="Sahip (User ID)"
-        value={formData.ownerId}
-        onChange={handleChange}
-        required
-      />
+      <div className="form-group">
+        <label htmlFor="ownerId">Sahip (User ID)</label>
+        <input
+          type="number"
+          id="ownerId"
+          name="ownerId"
+          placeholder="Sahip (User ID)"
+          value={formData.ownerId}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-      <input
-        type="number"
-        name="createdById"
-        placeholder="Oluşturan (User ID)"
-        value={formData.createdById}
-        onChange={handleChange}
-        required
-      />
+      <div className="form-group">
+        <label htmlFor="createdById">Oluşturan (User ID)</label>
+        <input
+          type="number"
+          id="createdById"
+          name="createdById"
+          placeholder="Oluşturan (User ID)"
+          value={formData.createdById}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-      <button type="submit">Görev Ekle</button>
+      <button type="submit" className="submit-button">Görev Ekle</button>
     </form>
   );
 };
