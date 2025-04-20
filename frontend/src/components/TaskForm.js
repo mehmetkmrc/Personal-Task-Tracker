@@ -33,6 +33,12 @@ const TaskForm = ({ onTaskCreated }) => {
 
     if (userId) {
       loadProjects();
+
+      setFormData((prev) => ({
+        ...prev,
+        ownerId: Number(userId),
+        createdById: Number(userId),
+      }));
     }
   }, [userId]);
 
@@ -137,33 +143,6 @@ const TaskForm = ({ onTaskCreated }) => {
         <option value="1">Devam Ediyor</option>
         <option value="2">Tamamlandı</option>
       </select>
-      </div>
-    
-
-      <div className="form-group">
-        <label htmlFor="ownerId">Sahip (User ID)</label>
-        <input
-          type="number"
-          id="ownerId"
-          name="ownerId"
-          placeholder="Sahip (User ID)"
-          value={formData.ownerId}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="createdById">Oluşturan (User ID)</label>
-        <input
-          type="number"
-          id="createdById"
-          name="createdById"
-          placeholder="Oluşturan (User ID)"
-          value={formData.createdById}
-          onChange={handleChange}
-          required
-        />
       </div>
 
       <button type="submit" className="submit-button">Görev Ekle</button>
