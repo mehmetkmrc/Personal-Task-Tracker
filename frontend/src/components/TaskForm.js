@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { createTask } from '../services/api';
+import React, { useState, useEffect} from 'react';
+import { useLocation } from 'react-router-dom';
+import { createTask, fetchProjectsByUserId } from '../services/api';
 import './TaskForm.css'; // CSS dosyasını ekledik.
 
 const TaskForm = ({ onTaskCreated }) => {
@@ -9,13 +10,35 @@ const TaskForm = ({ onTaskCreated }) => {
     dueDate: '',
     projectId: '',
     ownerId: '',
-    createdById: ''
+    createdById: '',
   });
+  const [projects, setProjects] = useState([]); // Proje listesini tutmak için
+  const location = useLocation();
+
+  // URL'den UserId'yi al
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get('UserId');
+
+  // Projeleri backend'den getir
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const response = await fetchProjectsByUserId(userId);
+        setProjects(response.data);
+      } catch (error) {
+        console.error('Projeler yüklenirken hata oluştu:', error);
+      }
+    };
+
+    if (userId) {
+      loadProjects();
+    }
+  }, [userId]);
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -31,7 +54,7 @@ const TaskForm = ({ onTaskCreated }) => {
         dueDate: '',
         projectId: '',
         ownerId: '',
-        createdById: ''
+        createdById: '',
       });
       if (onTaskCreated) onTaskCreated();
     } catch (error) {
@@ -80,16 +103,21 @@ const TaskForm = ({ onTaskCreated }) => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="projectId">Proje ID</label>
-        <input
-          type="number"
+        <label htmlFor="projectId">Proje</label>
+        <select
           id="projectId"
           name="projectId"
-          placeholder="Proje ID"
           value={formData.projectId}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Proje seçin</option>
+          {projects.map((project) => (
+            <option key={project.projectId} value={project.projectId}>
+              {project.projectName}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="form-group">
