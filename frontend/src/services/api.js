@@ -5,8 +5,16 @@ const API = axios.create({
 });
 
 // Tüm görevleri getir
-export const fetchTasks = (params) => API.get('/task', { params });
+export const fetchTasks = ({ projectId, status, userId }) => 
+  API.get('/task', { 
+    params: { 
+      projectId: projectId || undefined, 
+      status: status || undefined, 
+      userId: userId || undefined 
+    } 
+  });
 
+  
 // Yeni görev oluştur
 export const createTask = (taskData) => API.post('/task', taskData);
 

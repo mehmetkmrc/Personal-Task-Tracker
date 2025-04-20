@@ -5,7 +5,7 @@ import './TaskList.css';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
-  const [projects, setProjects] = useState([]); // To store projects
+  const [projects, setProjects] = useState([]);
   const [projectId, setProjectId] = useState('');
   const [status, setStatus] = useState('');
   const location = useLocation();
@@ -29,7 +29,7 @@ const TaskList = () => {
     // Fetch tasks based on filters
     const getTasks = async () => {
       try {
-        const { data } = await fetchTasks({ projectId, status });
+        const { data } = await fetchTasks({ projectId, status, userId }); // userId'yi ekle
         setTasks(data);
       } catch (error) {
         console.error('Görevler alınamadı:', error);
@@ -38,8 +38,8 @@ const TaskList = () => {
 
     if (userId) {
       loadProjects();
+      getTasks();
     }
-    getTasks();
   }, [userId, projectId, status]);
 
   return (
@@ -83,8 +83,9 @@ const TaskList = () => {
           tasks.map((task) => (
             <li key={task.id} className="task-item">
               <h4>{task.title}</h4>
-              <p><strong>Durum:</strong> {task.status === '0' ? 'Bekliyor' : task.status === '1' ? 'Devam Ediyor' : 'Tamamlandı'}</p>
-              <p><strong>Proje:</strong> #{task.projectId}</p>
+              <p><strong>Durum:</strong> {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}</p>
+              <p><strong>Proje:</strong> {task.projectName}</p> {/* ProjectName kullan */}
+              <p><strong>Oluşturan:</strong> {task.createdByName}</p> {/* CreatedByName ekle */}
             </li>
           ))
         ) : (

@@ -19,7 +19,7 @@ namespace PersonalTaskTracker.Api.Controllers
 
         // GET: api/task
         [HttpGet]
-        public async Task<IActionResult> GetTasks([FromQuery] int? projectId, [FromQuery] Models.TaskStatus? status)
+        public async Task<IActionResult> GetTasks([FromQuery] int? projectId, [FromQuery] Models.TaskStatus? status, [FromQuery] int? userId)
         {
             var query = _context.Tasks
                 .Include(t => t.Project)
@@ -32,6 +32,9 @@ namespace PersonalTaskTracker.Api.Controllers
 
             if (status.HasValue)
                 query = query.Where(t => t.Status == status.Value);
+
+            if (userId.HasValue)
+                query = query.Where(t => t.CreatedById == userId.Value); // CreatedById ile UserId eşitliğini kontrol et
 
 
             var tasks = await query
