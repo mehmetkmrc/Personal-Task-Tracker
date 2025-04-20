@@ -94,7 +94,7 @@ namespace PersonalTaskTracker.Api.Controllers
                 Description = dto.Description,
                 DueDate = dto.DueDate,
                 CreatedAt = DateTime.UtcNow,
-                Status = Models.TaskStatus.Bekliyor,
+                Status = dto.Status,
                 ProjectId = dto.ProjectId,
                 OwnerId = dto.OwnerId,
                 CreatedById = dto.CreatedById

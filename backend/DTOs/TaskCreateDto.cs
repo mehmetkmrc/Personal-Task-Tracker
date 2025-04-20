@@ -8,5 +8,6 @@
         public int ProjectId { get; set; }
         public int OwnerId { get; set; }
         public int CreatedById { get; set; }
+        public Models.TaskStatus Status { get; set; } // <-- bunu ekle!
     }
 }

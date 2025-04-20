@@ -11,6 +11,7 @@ const TaskForm = ({ onTaskCreated }) => {
     projectId: '',
     ownerId: '',
     createdById: '',
+    status: '',
   });
   const [projects, setProjects] = useState([]); // Proje listesini tutmak için
   const location = useLocation();
@@ -36,9 +37,10 @@ const TaskForm = ({ onTaskCreated }) => {
   }, [userId]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: name === 'status' ? Number(value) : value
     }));
   };
 
@@ -119,6 +121,24 @@ const TaskForm = ({ onTaskCreated }) => {
           ))}
         </select>
       </div>
+
+
+      <div className="form-group">
+      <label htmlFor="status">Durum</label>
+      <select
+        id="status"
+        name="status"
+        value={formData.status}
+        onChange={handleChange}
+        required
+      >
+         <option value="">Durum Seçiniz</option>
+        <option value="0">Bekliyor</option>
+        <option value="1">Devam Ediyor</option>
+        <option value="2">Tamamlandı</option>
+      </select>
+      </div>
+    
 
       <div className="form-group">
         <label htmlFor="ownerId">Sahip (User ID)</label>

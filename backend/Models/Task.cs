@@ -23,8 +23,8 @@
 
     public enum TaskStatus
     {
-        Bekliyor,
-        DevamEdiyor,
-        Tamamlandi
+        Bekliyor = 0,
+        DevamEdiyor = 1,
+        Tamamlandi = 2
     }
 }
