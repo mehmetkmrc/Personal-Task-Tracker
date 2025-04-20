@@ -10,6 +10,8 @@ const TaskList = () => {
   const [projects, setProjects] = useState([]);
   const [projectId, setProjectId] = useState('');
   const [status, setStatus] = useState('');
+  const [startDate, setStartDate] = useState(''); // Başlangıç tarihi
+  const [endDate, setEndDate] = useState(''); // Bitiş tarihi
   const location = useLocation();
 
   // Get UserId from URL
@@ -37,7 +39,7 @@ const TaskList = () => {
     // Fetch tasks based on filters
     const getTasks = async () => {
       try {
-        const { data } = await fetchTasks({ projectId, status, userId }); // userId'yi ekle
+        const { data } = await fetchTasks({ projectId, status, userId, startDate, endDate }); // userId'yi ekle
         setTasks(data);
       } catch (error) {
         console.error('Görevler alınamadı:', error);
@@ -48,7 +50,7 @@ const TaskList = () => {
       loadProjects();
       getTasks();
     }
-  }, [userId, projectId, status]);
+  }, [userId, projectId, status, startDate, endDate]);
 
   return (
     <div className="task-list-container">
@@ -83,6 +85,25 @@ const TaskList = () => {
             <option value="1">Devam Ediyor</option>
             <option value="2">Tamamlandı</option>
           </select>
+        </div>
+        <div className="filter-item">
+          <label htmlFor="startDate">Başlangıç Tarihi:</label>
+          <input
+            type="date"
+            id="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </div>
+
+        <div className="filter-item">
+          <label htmlFor="endDate">Bitiş Tarihi:</label>
+          <input
+            type="date"
+            id="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
         </div>
       </div>
 

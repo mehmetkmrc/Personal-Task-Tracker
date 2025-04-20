@@ -19,7 +19,9 @@ namespace PersonalTaskTracker.Api.Controllers
 
         // GET: api/task
         [HttpGet]
-        public async Task<IActionResult> GetTasks([FromQuery] int? projectId, [FromQuery] Models.TaskStatus? status, [FromQuery] int? userId)
+        public async Task<IActionResult> GetTasks([FromQuery] int? projectId, [FromQuery] Models.TaskStatus? status, [FromQuery] int? userId, 
+            [FromQuery] DateTime? startDate, 
+            [FromQuery] DateTime? endDate)
         {
             var query = _context.Tasks
                 .Include(t => t.Project)
@@ -34,7 +36,12 @@ namespace PersonalTaskTracker.Api.Controllers
                 query = query.Where(t => t.Status == status.Value);
 
             if (userId.HasValue)
-                query = query.Where(t => t.CreatedById == userId.Value); // CreatedById ile UserId eşitliğini kontrol et
+                query = query.Where(t => t.CreatedById == userId.Value);
+            if (startDate.HasValue)
+                query = query.Where(t => t.CreatedAt >= startDate.Value);
+
+            if (endDate.HasValue)
+                query = query.Where(t => t.CreatedAt <= endDate.Value.AddDays(1).AddTicks(-1)); // End date inclusive
 
 
             var tasks = await query
