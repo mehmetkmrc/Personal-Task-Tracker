@@ -1,13 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { fetchTasks } from '../services/api';
+import { fetchTasks, fetchProjectsByUserId } from '../services/api';
+import { useLocation } from 'react-router-dom';
 import './TaskList.css';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
+  const [projects, setProjects] = useState([]); // To store projects
   const [projectId, setProjectId] = useState('');
   const [status, setStatus] = useState('');
+  const location = useLocation();
 
+  // Get UserId from URL
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get('UserId');
+
+  // Fetch projects and tasks
   useEffect(() => {
+    // Fetch projects for the user
+    const loadProjects = async () => {
+      try {
+        const response = await fetchProjectsByUserId(userId);
+        setProjects(response.data);
+      } catch (error) {
+        console.error('Projeler yüklenirken hata oluştu:', error);
+      }
+    };
+
+    // Fetch tasks based on filters
     const getTasks = async () => {
       try {
         const { data } = await fetchTasks({ projectId, status });
@@ -17,8 +36,11 @@ const TaskList = () => {
       }
     };
 
+    if (userId) {
+      loadProjects();
+    }
     getTasks();
-  }, [projectId, status]);
+  }, [userId, projectId, status]);
 
   return (
     <div className="task-list-container">
@@ -26,22 +48,27 @@ const TaskList = () => {
 
       <div className="filter-section">
         <div className="filter-item">
-          <label htmlFor="projectId">Proje ID:</label>
-          <input 
+          <label htmlFor="projectId">Proje:</label>
+          <select
             id="projectId"
-            type="number" 
-            value={projectId} 
-            onChange={e => setProjectId(e.target.value)} 
-            placeholder="Proje ID girin"
-          />
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+          >
+            <option value="">Tüm Projeler</option>
+            {projects.map((project) => (
+              <option key={project.projectId} value={project.projectId}>
+                {project.projectName}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="filter-item">
           <label htmlFor="status">Durum:</label>
-          <select 
+          <select
             id="status"
-            value={status} 
-            onChange={e => setStatus(e.target.value)}
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
           >
             <option value="">Hepsi</option>
             <option value="0">Bekliyor</option>
@@ -53,7 +80,7 @@ const TaskList = () => {
 
       <ul className="task-list">
         {tasks.length > 0 ? (
-          tasks.map(task => (
+          tasks.map((task) => (
             <li key={task.id} className="task-item">
               <h4>{task.title}</h4>
               <p><strong>Durum:</strong> {task.status === '0' ? 'Bekliyor' : task.status === '1' ? 'Devam Ediyor' : 'Tamamlandı'}</p>

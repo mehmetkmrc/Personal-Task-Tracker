@@ -33,6 +33,7 @@ namespace PersonalTaskTracker.Api.Controllers
             if (status.HasValue)
                 query = query.Where(t => t.Status == status.Value);
 
+
             var tasks = await query
                 .Select(t => new TaskResponseDto
                 {
