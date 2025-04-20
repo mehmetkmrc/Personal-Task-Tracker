@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchTasks, fetchProjectsByUserId } from '../services/api';
 import { useLocation } from 'react-router-dom';
+import { format } from 'date-fns';
+import { tr } from 'date-fns/locale'; // Türkçe için
 import './TaskList.css';
 
 const TaskList = () => {
@@ -13,6 +15,12 @@ const TaskList = () => {
   // Get UserId from URL
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get('UserId');
+
+  // Tarih formatlama fonksiyonu
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, 'd MMMM yyyy, HH:mm', { locale: tr });
+  };
 
   // Fetch projects and tasks
   useEffect(() => {
@@ -86,6 +94,7 @@ const TaskList = () => {
               <p><strong>Durum:</strong> {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}</p>
               <p><strong>Proje:</strong> {task.projectName}</p> {/* ProjectName kullan */}
               <p><strong>Oluşturan:</strong> {task.createdByName}</p> {/* CreatedByName ekle */}
+              <p><strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}</p> {/* CreatedAt ekle */}
             </li>
           ))
         ) : (
