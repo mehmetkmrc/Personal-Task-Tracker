@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { fetchTasks } from '../services/api';
 import '../components/TaskList.css';  // aynı şık CSS kullanılabilir
+import { useUser } from '../context/UserContext'; // Context'i kullan
 
-const MyTasks = ({ userId }) => {
+const MyTasks = () => {
+  const { userId } = useUser(); // Context'ten userId al
   const [tasks, setTasks] = useState([]);
   const [status, setStatus] = useState('');
   const [dueDate, setDueDate] = useState('');

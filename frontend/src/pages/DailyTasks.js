@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { fetchTasks } from '../services/api';
 import '../components/TaskList.css';
+import { useUser } from '../context/UserContext'; // Context'i kullan
 
-const DailyTasks = ({ userId }) => {
+const DailyTasks = () => {
+  const { userId } = useUser(); // Context'ten userId al
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {

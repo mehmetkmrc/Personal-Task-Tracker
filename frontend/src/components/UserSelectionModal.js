@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './UserSelectionModal.css';
+import { useUser } from '../context/UserContext'; // Context'i kullan
 
 const UserSelectionModal = ({ onClose }) => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const { setUserId } = useUser(); // Context'ten setUserId al
 
   // Fetch users from the backend
   useEffect(() => {
@@ -18,6 +20,7 @@ const UserSelectionModal = ({ onClose }) => {
   }, []);
 
   const handleUserSelect = (userId) => {
+    setUserId(userId); // Context'e userId'yi kaydet
     navigate(`/add-task?UserId=${userId}`);
     onClose(); // Close the modal
   };
