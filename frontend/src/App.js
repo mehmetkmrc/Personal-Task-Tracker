@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import UserSelectionModal from './components/UserSelectionModal';
-import MyTasks from './components/MyTasks';
-import DailyTasks from './components/DailyTasks';
+import MyTasks from './pages/MyTasks';
+import DailyTasks from './pages/DailyTasks';
 import Navbar from './components/Navbar';  // Navbar eklendi
 
 function App() {
@@ -26,11 +26,11 @@ function App() {
           <Route path="/add-task" element={<><TaskForm /><TaskList /></>} />
 
           <Route path="/my-tasks" element={
-            currentUserId ? <MyTasks userId={currentUserId} /> : <Navigate/>
+             <MyTasks/>
           } />
 
           <Route path="/daily-tasks" element={
-            currentUserId ? <DailyTasks userId={currentUserId} /> : <Navigate/>
+            <DailyTasks/>
           } />
 
           <Route path="/" element={<TaskList />} />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchTasks } from '../services/api';
-import './TaskList.css';
+import '../components/TaskList.css';
 
 const DailyTasks = ({ userId }) => {
   const [tasks, setTasks] = useState([]);

@@ -1,7 +1,7 @@
 // src/components/MyTasks.js
 import React, { useEffect, useState } from 'react';
 import { fetchTasks } from '../services/api';
-import './TaskList.css';  // aynı şık CSS kullanılabilir
+import '../components/TaskList.css';  // aynı şık CSS kullanılabilir
 
 const MyTasks = ({ userId }) => {
   const [tasks, setTasks] = useState([]);
