@@ -1,8 +1,9 @@
-// src/components/MyTasks.js
 import React, { useEffect, useState } from 'react';
 import { fetchTasks } from '../services/api';
-import '../components/TaskList.css';  // aynı şık CSS kullanılabilir
-import { useUser } from '../context/UserContext'; // Context'i kullan
+import '../components/TaskList.css';
+import { format } from 'date-fns';
+import { tr } from 'date-fns/locale';
+import { useUser } from '../context/UserContext';
 
 const MyTasks = () => {
   const { userId } = useUser(); // Context'ten userId al
@@ -10,10 +11,16 @@ const MyTasks = () => {
   const [status, setStatus] = useState('');
   const [dueDate, setDueDate] = useState('');
 
+  // Tarih formatlama fonksiyonu
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return format(date, 'd MMMM yyyy, HH:mm', { locale: tr });
+    };
+
   useEffect(() => {
     const loadTasks = async () => {
       try {
-        const { data } = await fetchTasks({ ownerId: userId, status, dueDate });
+        const { data } = await fetchTasks({ userId, status, dueDate });
         setTasks(data);
       } catch (error) {
         console.error('Kişisel görevler alınamadı:', error);
@@ -36,7 +43,7 @@ const MyTasks = () => {
             id="dueDate"
             type="date"
             value={dueDate}
-            onChange={e => setDueDate(e.target.value)}
+            onChange={(e) => setDueDate(e.target.value)}
           />
         </div>
 
@@ -45,7 +52,7 @@ const MyTasks = () => {
           <select
             id="status"
             value={status}
-            onChange={e => setStatus(e.target.value)}
+            onChange={(e) => setStatus(e.target.value)}
           >
             <option value="">Hepsi</option>
             <option value="0">Bekliyor</option>
@@ -57,11 +64,19 @@ const MyTasks = () => {
 
       <ul className="task-list">
         {tasks.length > 0 ? (
-          tasks.map(task => (
+          tasks.map((task) => (
             <li key={task.id} className="task-item">
               <h4>{task.title}</h4>
-              <p><strong>Durum:</strong> {task.status === '0' ? 'Bekliyor' : task.status === '1' ? 'Devam Ediyor' : 'Tamamlandı'}</p>
-              <p><strong>Proje:</strong> #{task.projectId}</p>
+              <p>
+                <strong>Durum:</strong>{' '}
+                {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}
+              </p>
+              <p>
+                <strong>Proje:</strong> #{task.projectId}
+              </p>
+              <p><strong>Proje:</strong> {task.projectName}</p> {/* ProjectName kullan */}
+              <p><strong>Oluşturan:</strong> {task.createdByName}</p> {/* CreatedByName ekle */}
+              <p><strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}</p> {/* CreatedAt ekle */}
             </li>
           ))
         ) : (
