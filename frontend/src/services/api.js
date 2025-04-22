@@ -5,7 +5,7 @@ const API = axios.create({
 });
 
 // Tüm görevleri getir
-export const fetchTasks = ({ projectId, status, userId, startDate, endDate, dueDate }) => 
+export const fetchTasks = ({ projectId, status, userId, startDate, endDate, dueDate, isDaily }) => 
   API.get('/task', { 
     params: { 
       projectId: projectId || undefined, 
@@ -13,7 +13,8 @@ export const fetchTasks = ({ projectId, status, userId, startDate, endDate, dueD
       userId: userId || undefined,
       startDate: startDate || undefined,
       endDate: endDate || undefined,
-      dueDate: dueDate || undefined
+      dueDate: dueDate || undefined,
+      isDaily: isDaily || undefined,
     } 
   });
 

@@ -19,6 +19,7 @@
 
         public int CreatedById { get; set; }
         public User CreatedBy { get; set; }
+        public bool IsDaily { get; set; }
     }
 
     public enum TaskStatus

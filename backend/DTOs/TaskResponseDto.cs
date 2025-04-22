@@ -14,5 +14,6 @@
         public string OwnerName { get; set; } // User nesnesi yerine sadece adı
         public int CreatedById { get; set; }
         public string CreatedByName { get; set; } // User nesnesi yerine sadece adı
+        public bool IsDaily { get; set; }
     }
 }

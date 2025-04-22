@@ -19,7 +19,8 @@ const DailyTasks = () => {
       const { data } = await fetchTasks({ 
         userId, 
         dueDate: today,
-        status: [0, 1] // Sadece bekleyen veya devam eden görevler
+        status: [0, 1], // Sadece bekleyen veya devam eden görevler
+        isDaily: true
       });
       setTasks(data);
     } catch (error) {

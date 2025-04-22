@@ -22,7 +22,7 @@ namespace PersonalTaskTracker.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTasks([FromQuery] int? projectId, [FromQuery] List<Models.TaskStatus> status,  [FromQuery] int? userId, 
             [FromQuery] DateTime? startDate, 
-            [FromQuery] DateTime? endDate, [FromQuery] DateTime? dueDate)
+            [FromQuery] DateTime? endDate, [FromQuery] DateTime? dueDate, [FromQuery] bool? isDaily)
         {
             var query = _context.Tasks
                 .Include(t => t.Project)
@@ -46,6 +46,8 @@ namespace PersonalTaskTracker.Api.Controllers
 
             if (dueDate.HasValue)
                 query = query.Where(t => t.DueDate == dueDate.Value.Date);
+            if (isDaily.HasValue)
+                query = query.Where(t => t.IsDaily == isDaily.Value); // IsDailyTask filtresi
 
 
             var tasks = await query
@@ -62,7 +64,8 @@ namespace PersonalTaskTracker.Api.Controllers
                     OwnerId = t.OwnerId,
                     OwnerName = t.Owner.Name, // Sadece gerekli veriyi al
                     CreatedById = t.CreatedById,
-                    CreatedByName = t.CreatedBy.Name // Sadece gerekli veriyi al
+                    CreatedByName = t.CreatedBy.Name, // Sadece gerekli veriyi al
+                    IsDaily = t.IsDaily
                 })
                 .ToListAsync();
 
@@ -90,7 +93,8 @@ namespace PersonalTaskTracker.Api.Controllers
                     OwnerId = t.OwnerId,
                     OwnerName = t.Owner.Name,
                     CreatedById = t.CreatedById,
-                    CreatedByName = t.CreatedBy.Name
+                    CreatedByName = t.CreatedBy.Name,
+                    IsDaily = t.IsDaily
                 })
                 .FirstOrDefaultAsync(t => t.Id == id);
 
@@ -112,7 +116,8 @@ namespace PersonalTaskTracker.Api.Controllers
                 Status = dto.Status,
                 ProjectId = dto.ProjectId,
                 OwnerId = dto.OwnerId,
-                CreatedById = dto.CreatedById
+                CreatedById = dto.CreatedById,
+                IsDaily = false
             };
 
             _context.Tasks.Add(task);
@@ -132,6 +137,7 @@ namespace PersonalTaskTracker.Api.Controllers
             }
 
             task.DueDate = dto.DueDate;
+            task.IsDaily = true;
             await _context.SaveChangesAsync();
 
             return NoContent();
