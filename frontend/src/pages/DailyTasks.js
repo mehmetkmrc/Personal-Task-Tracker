@@ -1,23 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { fetchTasks } from '../services/api';
+import { fetchTasks, updateTaskStatus } from '../services/api';
 import '../components/TaskList.css';
-import { useUser } from '../context/UserContext'; // Context'i kullan
+import { useUser } from '../context/UserContext';
 
 const DailyTasks = () => {
-  const { userId } = useUser(); // Context'ten userId al
+  const { userId } = useUser();
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Görevleri yükle
+  const loadTasks = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      // CreatedById ile eşleşen ve DueDate bugüne eşit görevleri getir
+      const { data } = await fetchTasks({ userId, dueDate: today });
+      setTasks(data);
+    } catch (error) {
+      console.error('Günlük görevler alınamadı:', error);
+      setError('Görevler yüklenirken bir hata oluştu.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Görevi tamamlandı olarak işaretle
+  const markTaskAsCompleted = async (taskId) => {
+    try {
+      await updateTaskStatus(taskId, 2); // Status: 2 = Tamamlandı
+      loadTasks(); // Listeyi yenile
+      alert('Görev tamamlandı olarak işaretlendi!');
+    } catch (error) {
+      console.error('Görev güncellenemedi:', error);
+      alert('Görev güncellenirken bir hata oluştu.');
+    }
+  };
 
   useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const today = new Date().toISOString().split('T')[0];
-        const { data } = await fetchTasks({ ownerId: userId, dueDate: today });
-        setTasks(data);
-      } catch (error) {
-        console.error('Günlük görevler alınamadı:', error);
-      }
-    };
-
     if (userId) {
       loadTasks();
     }
@@ -26,17 +47,34 @@ const DailyTasks = () => {
   return (
     <div className="task-list-container">
       <h2 className="task-list-title">Bugünkü Görevlerim</h2>
+
+      {loading && <p className="loading-message">Görevler yükleniyor...</p>}
+      {error && <p className="error-message">{error}</p>}
+
       <ul className="task-list">
         {tasks.length > 0 ? (
-          tasks.map(task => (
+          tasks.map((task) => (
             <li key={task.id} className="task-item">
               <h4>{task.title}</h4>
-              <p><strong>Durum:</strong> {task.status === '0' ? 'Bekliyor' : task.status === '1' ? 'Devam Ediyor' : 'Tamamlandı'}</p>
-              <p><strong>Proje:</strong> #{task.projectId}</p>
+              <p>
+                <strong>Durum:</strong>{' '}
+                {task.status === '0' ? 'Bekliyor' : task.status === '1' ? 'Devam Ediyor' : 'Tamamlandı'}
+              </p>
+              <p>
+                <strong>Proje:</strong> #{task.projectId} - {task.projectName}
+              </p>
+              {task.status !== '2' && (
+                <button
+                  className="complete-task-btn"
+                  onClick={() => markTaskAsCompleted(task.id)}
+                >
+                  Tamamlandı Olarak İşaretle
+                </button>
+              )}
             </li>
           ))
         ) : (
-          <p className="empty-message">Bugün için atanmış görev yok.</p>
+          !loading && <p className="empty-message">Bugün için seçilmiş görev yok.</p>
         )}
       </ul>
     </div>

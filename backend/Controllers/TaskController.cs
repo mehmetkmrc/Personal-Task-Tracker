@@ -116,5 +116,38 @@ namespace PersonalTaskTracker.Api.Controllers
 
             return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
         }
+
+        // PUT: api/task/{id}/due-date
+        [HttpPut("{id}/due-date")]
+        public async Task<IActionResult> UpdateTaskDueDate(int id, [FromBody] UpdateDueDateDto dto)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+            if (task == null)
+            {
+                return NotFound("Görev bulunamadı.");
+            }
+
+            task.DueDate = dto.DueDate;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // PUT: api/task/{id}/status
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateTaskStatus(int id, [FromBody] UpdateStatusDto dto)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+            if (task == null)
+            {
+                return NotFound("Görev bulunamadı.");
+            }
+
+            task.Status = dto.Status;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }

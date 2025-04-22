@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { fetchTasks, fetchProjectsByUserId } from '../services/api';
+import { fetchTasks, fetchProjectsByUserId, updateTaskDueDate } from '../services/api';
 import { useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
-import { tr } from 'date-fns/locale'; // Türkçe için
+import { tr } from 'date-fns/locale';
 import './TaskList.css';
 
 const TaskList = () => {
@@ -10,8 +10,8 @@ const TaskList = () => {
   const [projects, setProjects] = useState([]);
   const [projectId, setProjectId] = useState('');
   const [status, setStatus] = useState('');
-  const [startDate, setStartDate] = useState(''); // Başlangıç tarihi
-  const [endDate, setEndDate] = useState(''); // Bitiş tarihi
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const location = useLocation();
 
   // Get UserId from URL
@@ -24,9 +24,23 @@ const TaskList = () => {
     return format(date, 'd MMMM yyyy, HH:mm', { locale: tr });
   };
 
+  // Günlük görevlere ekleme fonksiyonu
+  const addToDailyTasks = async (taskId) => {
+    try {
+      const today = new Date().toISOString().split('T')[0]; // Bugünün tarihi (YYYY-MM-DD)
+      await updateTaskDueDate(taskId, today);
+      // Görev listesini yenile
+      const { data } = await fetchTasks({ projectId, status, userId, startDate, endDate });
+      setTasks(data);
+      alert('Görev günlük görevlere eklendi!');
+    } catch (error) {
+      console.error('Görev günlük görevlere eklenemedi:', error);
+      alert('Görev eklenirken bir hata oluştu.');
+    }
+  };
+
   // Fetch projects and tasks
   useEffect(() => {
-    // Fetch projects for the user
     const loadProjects = async () => {
       try {
         const response = await fetchProjectsByUserId(userId);
@@ -36,10 +50,9 @@ const TaskList = () => {
       }
     };
 
-    // Fetch tasks based on filters
     const getTasks = async () => {
       try {
-        const { data } = await fetchTasks({ projectId, status, userId, startDate, endDate }); // userId'yi ekle
+        const { data } = await fetchTasks({ projectId, status, userId, startDate, endDate });
         setTasks(data);
       } catch (error) {
         console.error('Görevler alınamadı:', error);
@@ -112,10 +125,25 @@ const TaskList = () => {
           tasks.map((task) => (
             <li key={task.id} className="task-item">
               <h4>{task.title}</h4>
-              <p><strong>Durum:</strong> {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}</p>
-              <p><strong>Proje:</strong> {task.projectName}</p> {/* ProjectName kullan */}
-              <p><strong>Oluşturan:</strong> {task.createdByName}</p> {/* CreatedByName ekle */}
-              <p><strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}</p> {/* CreatedAt ekle */}
+              <p>
+                <strong>Durum:</strong>{' '}
+                {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}
+              </p>
+              <p>
+                <strong>Proje:</strong> {task.projectName}
+              </p>
+              <p>
+                <strong>Oluşturan:</strong> {task.createdByName}
+              </p>
+              <p>
+                <strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}
+              </p>
+              <button
+                className="add-to-daily-btn"
+                onClick={() => addToDailyTasks(task.id)}
+              >
+                Günlük Görevlere Ekle
+              </button>
             </li>
           ))
         ) : (

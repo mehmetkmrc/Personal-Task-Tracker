@@ -24,5 +24,13 @@ export const createTask = (taskData) => API.post('/task', taskData);
 export const fetchProjectsByUserId = (userId) =>
   API.get('/project/by-user', { params: { userId } });
 
+// Görevin DueDate değerini güncelle
+export const updateTaskDueDate = (taskId, dueDate) =>
+  API.put(`/task/${taskId}/due-date`, { dueDate });
+
+// Görevin durumunu güncelle
+export const updateTaskStatus = (taskId, status) =>
+  API.put(`/task/${taskId}/status`, { status });
+
 
 export default API;
