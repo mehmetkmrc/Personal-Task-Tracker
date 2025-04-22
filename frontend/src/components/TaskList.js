@@ -1,41 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { fetchTasks, fetchProjectsByUserId, updateTaskDueDate } from '../services/api';
-import { useLocation } from 'react-router-dom';
-import { format } from 'date-fns';
-import { tr } from 'date-fns/locale';
-import './TaskList.css';
+import React, { useEffect, useState } from "react";
+import {
+  fetchTasks,
+  fetchProjectsByUserId,
+  updateTaskDueDate,
+} from "../services/api";
+import { useLocation } from "react-router-dom";
+import { format } from "date-fns";
+import { tr } from "date-fns/locale";
+import "./TaskList.css";
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [projectId, setProjectId] = useState('');
-  const [status, setStatus] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [projectId, setProjectId] = useState("");
+  const [status, setStatus] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const location = useLocation();
 
   // Get UserId from URL
   const queryParams = new URLSearchParams(location.search);
-  const userId = queryParams.get('UserId');
+  const userId = queryParams.get("UserId");
 
   // Tarih formatlama fonksiyonu
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return format(date, 'd MMMM yyyy, HH:mm', { locale: tr });
+    return format(date, "d MMMM yyyy, HH:mm", { locale: tr });
   };
 
   // Günlük görevlere ekleme fonksiyonu
   const addToDailyTasks = async (taskId) => {
     try {
-      const today = new Date().toISOString().split('T')[0]; // Bugünün tarihi (YYYY-MM-DD)
+      const today = new Date().toISOString().split("T")[0]; // Bugünün tarihi (YYYY-MM-DD)
       await updateTaskDueDate(taskId, today);
       // Görev listesini yenile
-      const { data } = await fetchTasks({ projectId, status, userId, startDate, endDate });
+      const { data } = await fetchTasks({
+        projectId,
+        status,
+        userId,
+        startDate,
+        endDate,
+      });
       setTasks(data);
-      alert('Görev günlük görevlere eklendi!');
+      alert("Görev günlük görevlere eklendi!");
     } catch (error) {
-      console.error('Görev günlük görevlere eklenemedi:', error);
-      alert('Görev eklenirken bir hata oluştu.');
+      console.error("Görev günlük görevlere eklenemedi:", error);
+      alert("Görev eklenirken bir hata oluştu.");
     }
   };
 
@@ -46,16 +56,22 @@ const TaskList = () => {
         const response = await fetchProjectsByUserId(userId);
         setProjects(response.data);
       } catch (error) {
-        console.error('Projeler yüklenirken hata oluştu:', error);
+        console.error("Projeler yüklenirken hata oluştu:", error);
       }
     };
 
     const getTasks = async () => {
       try {
-        const { data } = await fetchTasks({ projectId, status, userId, startDate, endDate });
+        const { data } = await fetchTasks({
+          projectId,
+          status,
+          userId,
+          startDate,
+          endDate,
+        });
         setTasks(data);
       } catch (error) {
-        console.error('Görevler alınamadı:', error);
+        console.error("Görevler alınamadı:", error);
       }
     };
 
@@ -126,8 +142,12 @@ const TaskList = () => {
             <li key={task.id} className="task-item">
               <h4>{task.title}</h4>
               <p>
-                <strong>Durum:</strong>{' '}
-                {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}
+                <strong>Durum:</strong>{" "}
+                {task.status === 0
+                  ? "Bekliyor"
+                  : task.status === 1
+                  ? "Devam Ediyor"
+                  : "Tamamlandı"}
               </p>
               <p>
                 <strong>Proje:</strong> {task.projectName}
@@ -138,12 +158,18 @@ const TaskList = () => {
               <p>
                 <strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}
               </p>
-              <button
-                className="add-to-daily-btn"
-                onClick={() => addToDailyTasks(task.id)}
-              >
-                Günlük Görevlere Ekle
-              </button>
+              {task.isDaily ? (
+                <button className="added-to-daily-btn" disabled>
+                  Günlük Görevlere Eklendi ✔
+                </button>
+              ) : (
+                <button
+                  className="add-to-daily-btn"
+                  onClick={() => addToDailyTasks(task.id)}
+                >
+                  Günlük Görevlere Ekle
+                </button>
+              )}
             </li>
           ))
         ) : (

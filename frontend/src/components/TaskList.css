@@ -121,3 +121,15 @@
   .add-to-daily-btn:hover{
     background-color: #126daa;
   }
+
+  .added-to-daily-btn {
+    background-color: #18a31f;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    cursor: not-allowed;
+  }
+  
