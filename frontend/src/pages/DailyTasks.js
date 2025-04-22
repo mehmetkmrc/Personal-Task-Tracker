@@ -9,14 +9,18 @@ const DailyTasks = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Görevleri yükle
+  // Görevleri yükle (sadece durumu 0 veya 1 olanlar)
   const loadTasks = async () => {
     setLoading(true);
     setError(null);
     try {
       const today = new Date().toISOString().split('T')[0];
-      // CreatedById ile eşleşen ve DueDate bugüne eşit görevleri getir
-      const { data } = await fetchTasks({ userId, dueDate: today });
+      // CreatedById ile eşleşen, DueDate bugüne eşit ve status 0 veya 1 olan görevleri getir
+      const { data } = await fetchTasks({ 
+        userId, 
+        dueDate: today,
+        status: [0, 1] // Sadece bekleyen veya devam eden görevler
+      });
       setTasks(data);
     } catch (error) {
       console.error('Günlük görevler alınamadı:', error);
@@ -30,7 +34,7 @@ const DailyTasks = () => {
   const markTaskAsCompleted = async (taskId) => {
     try {
       await updateTaskStatus(taskId, 2); // Status: 2 = Tamamlandı
-      loadTasks(); // Listeyi yenile
+      loadTasks(); // Listeyi yenile (artık tamamlanan görev listede görünmeyecek)
       alert('Görev tamamlandı olarak işaretlendi!');
     } catch (error) {
       console.error('Görev güncellenemedi:', error);
@@ -58,12 +62,12 @@ const DailyTasks = () => {
               <h4>{task.title}</h4>
               <p>
                 <strong>Durum:</strong>{' '}
-                {task.status === '0' ? 'Bekliyor' : task.status === '1' ? 'Devam Ediyor' : 'Tamamlandı'}
+                {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}
               </p>
               <p>
                 <strong>Proje:</strong> #{task.projectId} - {task.projectName}
               </p>
-              {task.status !== '2' && (
+              {task.status !== 2 && (
                 <button
                   className="complete-task-btn"
                   onClick={() => markTaskAsCompleted(task.id)}

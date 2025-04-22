@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using PersonalTaskTracker.Api.Data;
 using PersonalTaskTracker.Api.DTOs;
 using PersonalTaskTracker.Api.Models;
@@ -19,9 +20,9 @@ namespace PersonalTaskTracker.Api.Controllers
 
         // GET: api/task
         [HttpGet]
-        public async Task<IActionResult> GetTasks([FromQuery] int? projectId, [FromQuery] Models.TaskStatus? status, [FromQuery] int? userId, 
+        public async Task<IActionResult> GetTasks([FromQuery] int? projectId, [FromQuery] List<Models.TaskStatus> status,  [FromQuery] int? userId, 
             [FromQuery] DateTime? startDate, 
-            [FromQuery] DateTime? endDate)
+            [FromQuery] DateTime? endDate, [FromQuery] DateTime? dueDate)
         {
             var query = _context.Tasks
                 .Include(t => t.Project)
@@ -32,8 +33,8 @@ namespace PersonalTaskTracker.Api.Controllers
             if (projectId.HasValue)
                 query = query.Where(t => t.ProjectId == projectId.Value);
 
-            if (status.HasValue)
-                query = query.Where(t => t.Status == status.Value);
+            if (status != null && status.Count > 0)
+                query = query.Where(t => status.Contains(t.Status));
 
             if (userId.HasValue)
                 query = query.Where(t => t.CreatedById == userId.Value);
@@ -42,6 +43,9 @@ namespace PersonalTaskTracker.Api.Controllers
 
             if (endDate.HasValue)
                 query = query.Where(t => t.CreatedAt <= endDate.Value.AddDays(1).AddTicks(-1)); // End date inclusive
+
+            if (dueDate.HasValue)
+                query = query.Where(t => t.DueDate == dueDate.Value.Date);
 
 
             var tasks = await query
