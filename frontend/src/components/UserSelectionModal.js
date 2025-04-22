@@ -28,7 +28,8 @@ const UserSelectionModal = ({ onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Kullanıcı Seçiniz</h2>
+        <h1>Task Tracker'a Hoş Geldiniz!</h1>
+        <h3>Lütfen Kullanıcı Seçiniz:</h3>
         <div className="user-list">
           {users.map((user) => (
             <button
