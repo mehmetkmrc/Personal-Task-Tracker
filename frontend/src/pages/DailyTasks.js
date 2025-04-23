@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchTasks, updateTaskStatus } from '../services/api';
 import '../components/TaskList.css';
 import { useUser } from '../context/UserContext';
+import { toast } from 'react-toastify';
 
 const DailyTasks = () => {
   const { userId } = useUser();
@@ -36,10 +37,10 @@ const DailyTasks = () => {
     try {
       await updateTaskStatus(taskId, 2); // Status: 2 = Tamamlandı
       loadTasks(); // Listeyi yenile (artık tamamlanan görev listede görünmeyecek)
-      alert('Görev tamamlandı olarak işaretlendi!');
+      toast.success('Görev tamamlandı olarak işaretlendi!');
     } catch (error) {
       console.error('Görev güncellenemedi:', error);
-      alert('Görev güncellenirken bir hata oluştu.');
+      toast.error('Görev güncellenirken bir hata oluştu.');
     }
   };
 

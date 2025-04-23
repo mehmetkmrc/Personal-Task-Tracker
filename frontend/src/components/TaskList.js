@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 import "./TaskList.css";
+import { toast } from 'react-toastify';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
@@ -42,10 +43,10 @@ const TaskList = () => {
         endDate,
       });
       setTasks(data);
-      alert("Görev günlük görevlere eklendi!");
+      toast.success("Görev günlük görevlere eklendi!");
     } catch (error) {
       console.error("Görev günlük görevlere eklenemedi:", error);
-      alert("Görev eklenirken bir hata oluştu.");
+      toast.success("Görev eklenirken bir hata oluştu.");
     }
   };
 

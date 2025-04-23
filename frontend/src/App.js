@@ -7,6 +7,7 @@ import UserSelectionModal from './components/UserSelectionModal';
 import MyTasks from './pages/MyTasks';
 import DailyTasks from './pages/DailyTasks';
 import Navbar from './components/Navbar';  // Navbar eklendi
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -16,7 +17,9 @@ function App() {
   };
 
   return (
+    
     <UserProvider>
+      <ToastContainer position="top-right" autoClose={3000} />
       <Router>
         {isModalOpen && <UserSelectionModal onClose={closeModal} />}
         {!isModalOpen && <Navbar />}
