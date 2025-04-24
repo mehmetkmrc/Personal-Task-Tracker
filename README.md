@@ -27,7 +27,7 @@ Personal Task Tracker, kullanıcıların kişisel yapılacaklar listelerini (ToD
 
 ### Backend (ASP.NET Core)
 
-1. `backend` klasörüne gidin:
+1. `backend` klasörüne gidin:
 
    ```bash
    cd backend
@@ -57,21 +57,21 @@ Personal Task Tracker, kullanıcıların kişisel yapılacaklar listelerini (ToD
 
 ### Frontend (React)
 
-1. `frontend` klasörüne gidin:
+1. `frontend` klasörüne gidin:
 
    ```bash
    cd frontend
    ```
 
 
-2. Gerekli npm paketlerini yükleyin:
+2. Gerekli npm paketlerini yükleyin:
 
    ```bash
    npm install
    ```
 
 
-3. Uygulamayı başlatın:
+3. Uygulamayı başlatın:
 
    ```bash
    npm start
@@ -81,25 +81,12 @@ Personal Task Tracker, kullanıcıların kişisel yapılacaklar listelerini (ToD
 ## Kullanım
 
 1. Uygulamayı başlattıktan sonra, tarayıcınızda `http://localhost:3000` adresine gidin.
-2. Yeni bir kullanıcı kaydı oluşturun veya mevcut bir kullanıcı ile giriş yapın.
+2. Yeni bir kullanıcı kaydı oluşturun(task Dosyasında hazır verilerdeki bilgiler) veya mevcut bir kullanıcı ile giriş yapın.
 3. Yeni görevler ekleyin, mevcut görevleri düzenleyin veya silin.
 4. Görevlerin tamamlanma durumlarını güncelleyin.
 
-## Katkı Sağlama
-
-Katkılarınızı memnuniyetle karşılıyoruz! Lütfen aşağıdaki adımları izleyerek katkıda bulunun:
-
-1. Bu depoyu forklayın.
-2. Yeni bir dal oluşturun: `git checkout -b feature/yenilik`
-3. Değişikliklerinizi yapın ve commit edin: `git commit -m 'Yeni özellik eklendi'`
-4. Dalınızı push edin: `git push origin feature/yenilik`
-5. Bir Pull Request oluşturun.
-
-## Lisans
-
-Bu proje MIT Lisansı ile lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına bakınız.
 
 ## İletişim
 
-Proje ile ilgili sorularınız veya önerileriniz için [mehmetkmrc](https://github.com/mehmetkmrc) ile iletişime geçebilirsiniz.
+Proje ile ilgili sorularınız veya önerileriniz için [mehmetkmrc](https://github.com/mehmetkmrc) ile iletişime geçebilirsiniz.
 
