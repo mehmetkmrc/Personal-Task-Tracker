@@ -15,11 +15,11 @@ const DailyTasks = () => {
     setLoading(true);
     setError(null);
     try {
-      const today = new Date().toISOString().split('T')[0];
+      //const today = new Date().toISOString().split('T')[0];
       // CreatedById ile eşleşen, DueDate bugüne eşit ve status 0 veya 1 olan görevleri getir
       const { data } = await fetchTasks({ 
         userId, 
-        dueDate: today,
+        //dueDate: today,
         status: [0, 1], // Sadece bekleyen veya devam eden görevler
         isDaily: true
       });

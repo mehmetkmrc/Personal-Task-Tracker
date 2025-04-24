@@ -71,7 +71,7 @@ const TaskComments = ({ taskId, userId }) => {
       required
     />
     <div className="comment-buttons">
-      <button type="submit">Gönder</button>
+      <button type="submit">Yorumu Oluştur</button>
       <button
         type="button"
         className="cancel-btn"
