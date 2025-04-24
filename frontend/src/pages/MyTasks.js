@@ -37,7 +37,7 @@ const MyTasks = () => {
   return (
     <div className="task-list-container">
       <h2 className="task-list-title">Tüm Görevlerim</h2>
-
+  
       <div className="filter-section">
         <div className="filter-item">
           <label htmlFor="dueDate">Tarihe göre:</label>
@@ -48,7 +48,7 @@ const MyTasks = () => {
             onChange={(e) => setDueDate(e.target.value)}
           />
         </div>
-
+  
         <div className="filter-item">
           <label htmlFor="status">Durum:</label>
           <select
@@ -59,11 +59,14 @@ const MyTasks = () => {
             <option value="">Hepsi</option>
             <option value="0">Bekliyor</option>
             <option value="1">Devam Ediyor</option>
-            <option value="2">Tamamlandı</option>
+            <option value="2">Tamamlandı(Görev Geçmişi)</option>
           </select>
         </div>
       </div>
-
+  
+      
+      {status === "2" && <h3 className="task-history-title">Görev Geçmişi</h3>}
+  
       <ul className="task-list">
         {tasks.length > 0 ? (
           tasks.map((task) => (
@@ -71,14 +74,24 @@ const MyTasks = () => {
               <h4>{task.title}</h4>
               <p>
                 <strong>Durum:</strong>{' '}
-                {task.status === 0 ? 'Bekliyor' : task.status === 1 ? 'Devam Ediyor' : 'Tamamlandı'}
+                {task.status === 0
+                  ? 'Bekliyor'
+                  : task.status === 1
+                  ? 'Devam Ediyor'
+                  : 'Tamamlandı'}
               </p>
               <p>
                 <strong>Proje:</strong> #{task.projectId}
               </p>
-              <p><strong>Proje:</strong> {task.projectName}</p> {/* ProjectName kullan */}
-              <p><strong>Oluşturan:</strong> {task.createdByName}</p> {/* CreatedByName ekle */}
-              <p><strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}</p> {/* CreatedAt ekle */}
+              <p>
+                <strong>Proje:</strong> {task.projectName}
+              </p>
+              <p>
+                <strong>Oluşturan:</strong> {task.createdByName}
+              </p>
+              <p>
+                <strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}
+              </p>
               <TaskComments taskId={task.id} userId={userId} />
             </li>
           ))
@@ -88,6 +101,7 @@ const MyTasks = () => {
       </ul>
     </div>
   );
+  
 };
 
 export default MyTasks;
