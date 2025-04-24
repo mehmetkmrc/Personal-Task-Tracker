@@ -34,5 +34,14 @@ export const updateTaskDueDate = (taskId, dueDate) =>
 export const updateTaskStatus = (taskId, status) =>
   API.put(`/task/${taskId}/status`, { status });
 
+// Yorumları getir
+export const fetchTaskComments = (taskId) =>
+  API.get(`/tasks/${taskId}/comments`);
+
+// Yorum ekle
+export const addTaskComment = (taskId, commentData) =>
+  API.post(`/tasks/${taskId}/comments`, commentData);
+
+
 
 export default API;

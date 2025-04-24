@@ -4,6 +4,8 @@ import '../components/TaskList.css';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { useUser } from '../context/UserContext';
+import TaskComments from '../components/TaskComments';
+
 
 const MyTasks = () => {
   const { userId } = useUser(); // Context'ten userId al
@@ -77,6 +79,7 @@ const MyTasks = () => {
               <p><strong>Proje:</strong> {task.projectName}</p> {/* ProjectName kullan */}
               <p><strong>Oluşturan:</strong> {task.createdByName}</p> {/* CreatedByName ekle */}
               <p><strong>Oluşturma Tarihi:</strong> {formatDate(task.createdAt)}</p> {/* CreatedAt ekle */}
+              <TaskComments taskId={task.id} userId={userId} />
             </li>
           ))
         ) : (

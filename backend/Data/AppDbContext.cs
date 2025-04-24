@@ -14,6 +14,8 @@ namespace PersonalTaskTracker.Api.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<Models.Task> Tasks { get; set; }
+        public DbSet<TaskComment> TaskComments { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,6 +42,18 @@ namespace PersonalTaskTracker.Api.Data
                 .HasOne(pu => pu.User)
                 .WithMany(u => u.ProjectUsers)
                 .HasForeignKey(pu => pu.UserId);
+
+            modelBuilder.Entity<TaskComment>()
+                .HasOne(tc => tc.Task)
+                .WithMany()
+                .HasForeignKey(tc => tc.TaskId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TaskComment>()
+                .HasOne(tc => tc.User)
+                .WithMany()
+                .HasForeignKey(tc => tc.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
